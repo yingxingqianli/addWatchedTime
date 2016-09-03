@@ -1,0 +1,35 @@
+
+
+
+//查看以前看过的记录
+	private String getWatchedInfo(String id, HttpServletRequest request) {
+		Cookie[] cookies = request.getCookies();
+		String ids = null;
+		for(int i = 0;cookies != null && i < cookies.length;i++){
+			Cookie cookie = cookies[i];
+			if(cookie.getName().equals("book")){
+				ids = cookie.getValue();
+			}
+		}
+		//1.为空
+		if(ids == null){
+			return id;
+		}
+		LinkedList<String> linkedList = new LinkedList<String>(Arrays.asList(ids.split(",")));
+		//2.包含此id
+		if(linkedList.contains(id)){
+			linkedList.remove(id);
+		}else{
+			//3.达到三个
+			if(linkedList.size()>=3){
+				linkedList.removeLast();
+			}
+		}
+		linkedList.addFirst(id);
+		StringBuilder sb = new StringBuilder();
+		for(String s : linkedList){
+			sb.append(s+",");
+		}
+		
+		return sb.deleteCharAt(sb.length() - 1).toString();
+	}
